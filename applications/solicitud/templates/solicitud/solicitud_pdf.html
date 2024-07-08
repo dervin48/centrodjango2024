@@ -1,0 +1,78 @@
+<!-- templates/solicitud_pdf.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Solicitud PDF</title>
+    <style>
+        body { font-family: 'DejaVu Sans', sans-serif; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        table, th, td { border: 1px solid black; }
+        th, td { padding: 10px; text-align: left; }
+        .signature-section { margin-top: 50px; }
+        .signature { display: inline-block; width: 45%; text-align: center; }
+        .signature-line { border-top: 1px solid black; width: 80%; margin: 0 auto 5px; }
+        .signature-name { margin-top: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Requisicion #{{ solicitud.requisition }}</h1>
+    <p>Fecha de Solicitud: {{ solicitud.applicationdate }}</p>
+    <p>Fecha de Despacho: {{ solicitud.shipmentdate }}</p>
+    <p>Servicio: {{ solicitud.applicant.servicio }}</p>
+
+    <h2>Detalle de Solicitud</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>No.</th>
+                <th>Insumo</th>
+                <th>Solicitado</th>
+                <th>Despachado</th>
+                <th>Precio</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for detalle in detalle_solicitud %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ detalle.insumo.name }}</td>
+                <td>{{ detalle.cant }}</td>
+                <td>{{ detalle.cant }}</td>
+                <td>{{ detalle.insumo.price }}</td>
+                <td>{{ detalle.total}}</td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td coldspan="5" style="text-align:rigt;"><strong>Total</strong></td>
+                <td><strong>{{total_general}}</strong></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>Observaciones</h3>
+    <p>{{ solicitud.observacion|default_if_none:"" }}</p>
+
+    <div class="signature-section">
+        <div class="signature">
+            <div class="signature-line"></div>
+            <div class="signature-name">{{ solicitud.applicant.nombre_completo }}<br>{{ solicitud.applicant.cargo }}</div>
+        </div>
+        <div class="signature">
+            <div class="signature-line"></div>
+            <div class="signature-name">{{detalle.jefe}}<br>Título 2</div>
+        </div>
+    </div>
+    <div class="signature-section">
+        <div class="signature">
+            <div class="signature-line"></div>
+            <div class="signature-name">{{centro.jefe.nombre_completo}}<br>Título 3</div>
+        </div>
+        <div class="signature">
+            <div class="signature-line"></div>
+            <div class="signature-name">{{ centro.encargado_de_bodega.nombre_completo }}<br>{{ solicitud.applicant.cargo }}</div>
+        </div>
+    </div>
+</body>
+</html>
